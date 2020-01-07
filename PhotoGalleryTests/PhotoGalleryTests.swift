@@ -15,6 +15,33 @@ class PhotoGalleryTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
+    func testFlickrImageSearchAPIIsWorking() {
+
+        NetworkHandler.shared.getImagesFor(searchString: "kittens", page: 11) { (response) in
+            switch response {
+            case .success(let result):
+                XCTAssertNil(result, "API did not give any response")
+            case .failure( _):
+                XCTFail("Fail - error received")
+            }
+
+        }
+    }
+    
+    func testFlickrImageSearchAPIResponsePageCorrectness() {
+        let page = 11
+        NetworkHandler.shared.getImagesFor(searchString: "kittens", page: page) { (response) in
+            switch response {
+            case .success(let pageResults):
+                XCTAssertTrue(pageResults.currentPage == page, "Incorrect Page Results")
+                
+            case .failure( _):
+                XCTFail("Fail")
+            }
+
+        }
+    }
+    
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
